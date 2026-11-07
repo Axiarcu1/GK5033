@@ -384,27 +384,27 @@ Dựa trên phân tích phản biện ở trên, tôi đề xuất hai giả thu
            minimum width=2.8cm, minimum height=1.3cm, align=center, font=\small]
            (sensor) at (0, 0) {Tín hiệu ngõ vào\\$V_{in}(t)$ (Y sinh/IoT)};
 
-    % Khối 2: Bộ phát hiện sự kiện (Ở trên, thẳng hàng với SAR ADC tại x=7.0)
+    % Khối 2: Bộ phát hiện sự kiện (Ở trên, đặt tại x=7.8)
     \node [draw, rectangle, fill=yellow!25, rounded corners=3pt,
            minimum width=3.4cm, minimum height=1.2cm, align=center, font=\small]
-           (event) at (7.0, 2.2) {Bộ phát hiện sự kiện\\(Event Detector)};
+           (event) at (7.8, 2.2) {Bộ phát hiện sự kiện\\(Event Detector)};
 
-    % Khối 3: SAR ADC Bất đồng bộ (Ở giữa, đặt tại x=7.0 để kéo dài mũi tên ngõ vào)
+    % Khối 3: SAR ADC Bất đồng bộ (Ở giữa, đặt tại x=7.8 kéo dài tối đa mũi tên ngõ vào)
     \node [draw, rectangle, fill=green!15, rounded corners=3pt,
            minimum width=3.4cm, minimum height=1.3cm, align=center, font=\small]
-           (sar) at (7.0, 0) {SAR ADC Bất đồng bộ\\với Mảng tụ Mini-CDAC};
+           (sar) at (7.8, 0) {SAR ADC Bất đồng bộ\\với Mảng tụ Mini-CDAC};
 
-    % Khối 4: Khối tự hiệu chuẩn số (Ở dưới, thẳng hàng với SAR ADC tại x=7.0)
+    % Khối 4: Khối tự hiệu chuẩn số (Ở dưới, thẳng hàng với SAR ADC tại x=7.8)
     \node [draw, rectangle, fill=red!15, rounded corners=3pt,
            minimum width=3.4cm, minimum height=1.2cm, align=center, font=\small]
-           (calib) at (7.0, -2.2) {Khối tự hiệu chuẩn số\\On-chip Calibration};
+           (calib) at (7.8, -2.2) {Khối tự hiệu chuẩn số\\On-chip Calibration};
 
-    % Đường 1: Từ ngõ vào rẽ lên Bộ phát hiện sự kiện (phân đoạn rõ ràng, chữ đặt ở giữa đoạn ngang thoáng)
-    \draw [thick] (sensor.east) -- ++(1.2, 0) coordinate (p1) -- (p1 |- event.west);
-    \draw [->, thick] (p1 |- event.west) -- node[midway, above, font=\small] {Phát hiện ngưỡng} (event.west);
+    % Đường 1: Rẽ nhánh lên Bộ phát hiện sự kiện (rẽ sớm tại x=2.1, đoạn ngang dài 4.0cm rộng rãi cho nhãn)
+    \draw [thick] (sensor.east) -- ++(0.7, 0) coordinate (p1) -- (p1 |- event.west);
+    \draw [->, thick] (p1 |- event.west) -- node[midway, above=3pt, font=\small] {Phát hiện ngưỡng} (event.west);
 
-    % Đường 2: Tín hiệu tương tự trực tiếp từ ngõ vào sang SAR ADC (mũi tên dài 4.0cm, đủ chỗ rộng rãi cho nhãn)
-    \draw [->, thick] (sensor.east) -- node[midway, above, font=\small] {Tín hiệu tương tự $V_{in}$} (sar.west);
+    % Đường 2: Tín hiệu tương tự ngõ vào sang SAR ADC (dài 4.7cm, nhãn đặt DƯỚI mũi tên, không giao cắt)
+    \draw [->, thick] (sensor.east) -- node[midway, below=4pt, font=\small] {Tín hiệu tương tự $V_{in}$} (sar.west);
 
     % Đường 3: Tín hiệu kích hoạt từ Event Detector xuống SAR ADC (đường thẳng đứng từ trên xuống)
     \draw [->, thick] (event.south) -- node[right, font=\small] {Kích hoạt chuyển đổi} (sar.north);
