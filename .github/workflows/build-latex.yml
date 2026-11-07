@@ -47,3 +47,4 @@ jobs:
           body: "Báo cáo Bài tập cá nhân học phần Phương pháp nghiên cứu khoa học (GK5033) được biên dịch tự động từ mã nguồn LaTeX mới nhất."
           allowUpdates: true
           replacesArtifacts: true
+
