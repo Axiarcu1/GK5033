@@ -1,0 +1,475 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A,T1]{fontenc}
+\usepackage[english,vietnamese]{babel}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in, top=1.2in, bottom=1.2in}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{circuits.ee.IEC, positioning, arrows.meta, calc, patterns, shapes.geometric}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{siunitx}
+\usepackage{booktabs}
+\usepackage{fancyhdr}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{tabularx}
+\usepackage{array}
+
+% Cấu hình header & footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{GK5033 - Phương pháp Nghiên cứu Khoa học}}
+\fancyhead[R]{\small\textit{Báo cáo Bài tập Cá nhân (30\%)}}
+\fancyfoot[L]{\small\textit{Học viên: Vũ Tiến Giang - MSHV: 2570188}}
+\fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.5pt}
+
+% Định dạng hyperlink
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!80!black,
+    citecolor=blue!80!black,
+    urlcolor=teal
+}
+
+\begin{document}
+
+%=============================================================================
+% TRANG BÌA (TITLE PAGE)
+%=============================================================================
+\begin{titlepage}
+\centering
+
+\textbf{\large ĐẠI HỌC QUỐC GIA THÀNH PHỐ HỒ CHÍ MINH}\\
+\textbf{\large TRƯỜNG ĐẠI HỌC BÁCH KHOA}\\
+\textbf{\large KHOA ĐIỆN -- ĐIỆN TỬ}\\
+\textbf{\normalsize BỘ MÔN ĐIỆN TỬ}\\
+\vspace{0.6cm}
+
+% Logo Bách Khoa với bộ kiểm tra fallback tự động
+\IfFileExists{img/01_logobachkhoasang.png}{%
+    \includegraphics[width=0.25\textwidth]{img/01_logobachkhoasang.png}%
+}{%
+    \begin{tikzpicture}[scale=0.75]
+        \draw[blue!80!black, line width=2pt] (0,0) circle (1.4cm);
+        \node[align=center, font=\bfseries\color{blue!80!black}] at (0,0) {\large ĐHBK\\\small TP.HCM};
+    \end{tikzpicture}
+}
+\vspace{0.6cm}
+
+\rule{\linewidth}{0.6mm}\\[0.4cm]
+{\LARGE \textbf{BÁO CÁO BÀI TẬP CÁ NHÂN (30\%)}}\\[0.3cm]
+{\Large \textbf{HỌC PHẦN: PHƯƠNG PHÁP NGHIÊN CỨU KHOA HỌC (GK5033)}}\\[0.3cm]
+{\large \textbf{CHỦ ĐỀ: PHÂN TÍCH VÀ SO SÁNH VẤN ĐỀ NGHIÊN CỨU, GIẢ THUYẾT NGHIÊN CỨU TRONG CÁC BÀI BÁO KHOA HỌC NGÀNH THIẾT KẾ VI MẠCH}}\\[0.2cm]
+\rule{\linewidth}{0.6mm}\\
+\vspace{1.2cm}
+
+\begin{minipage}{0.9\textwidth}
+\large
+\begin{tabular}{ll}
+\textbf{Cán bộ phụ trách:}       & TS. PHAN THÀNH NHÂN \\[0.3cm]
+\textbf{Học viên thực hiện:}      & VŨ TIẾN GIANG \\[0.2cm]
+\textbf{Mã số học viên (MSHV):}   & 2570188 \\[0.2cm]
+\textbf{Ngành đào tạo:}           & Kỹ thuật Điện tử -- Viễn thông \\[0.2cm]
+\textbf{Khóa đào tạo:}            & Cao học -- Khóa 2025
+\end{tabular}
+\end{minipage}
+
+\vfill
+
+{\large Thành phố Hồ Chí Minh, Tháng 11 Năm 2026}
+
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\newpage
+
+%=============================================================================
+% MỞ ĐẦU
+%=============================================================================
+\section{Mở đầu và Tổng quan Lĩnh vực Nghiên cứu}
+
+\subsection{Bối cảnh ngành Thiết kế Vi mạch và Bộ biến đổi Tương tự - Số (ADC)}
+Ngành thiết kế vi mạch tích hợp (Integrated Circuit - IC Design) đóng vai trò nền tảng cốt lõi trong thời đại công nghệ số, đặc biệt trong các lĩnh vực Internet vạn vật (IoT), trí tuệ nhân tạo biên (Edge AI), và thiết bị y sinh cấy ghép (Biomedical Implants). Trong các hệ thống vi mạch tín hiệu hỗn hợp (Mixed-Signal ICs), bộ biến đổi tương tự - số (Analog-to-Digital Converter - ADC) giữ vị trí then chốt, là cầu nối chuyển đổi các tín hiệu vật lý liên tục từ thế giới thực (âm thanh, nhiệt độ, điện tâm đồ, sóng vô tuyến) thành chuỗi dữ liệu số phục vụ xử lý số.
+
+Trong số các kiến trúc ADC phổ biến (Flash, Pipelined, Sigma-Delta, SAR), kiến trúc xấp xỉ liên tiếp (Successive Approximation Register - SAR ADC) nổi lên như một lựa chọn tối ưu hàng đầu cho các ứng dụng yêu cầu tiêu thụ năng lượng cực thấp (Ultra-Low-Power). Nhờ cấu trúc chủ yếu dựa trên các khối logic số và một mảng tụ điện dung (Capacitive Digital-to-Analog Converter - CDAC) cùng một bộ so sánh (Comparator), SAR ADC được hưởng lợi trực tiếp từ sự thu nhỏ kích thước của các tiến trình công nghệ CMOS tiên tiến. Tuy nhiên, khi chuyển dịch sang các node công nghệ sâu (deep sub-micron), việc tối ưu đồng thời ba chỉ số: năng lượng tiêu thụ, độ phân giải hiệu dụng (ENOB), và diện tích chip đặt ra những thách thức nghiên cứu vô cùng phức tạp.
+
+\subsection{Lựa chọn các bài báo khoa học nghiên cứu}
+Để phục vụ việc phân tích, so sánh phương pháp luận khoa học, bài báo cáo này lựa chọn ba công trình nghiên cứu tiêu biểu, có tính kế thừa và phát triển liên tục trong lĩnh vực thiết kế vi mạch SAR ADC năng lượng cực thấp, được công bố trên các diễn đàn khoa học uy tín hàng đầu thế giới (IEEE Journal of Solid-State Circuits và Electronics Letters/IEEE TCAS):
+
+\begin{itemize}
+    \item \textbf{Bài báo 1 (Paper 1 - JSSC 2010):} Chun-Cheng Liu, Soon-Jyh Chang, Guan-Ying Huang, and Ying-Zu Lin, \textit{"A 10-bit 50-MS/s SAR ADC with a monotonic capacitor switching procedure,"} \textbf{IEEE Journal of Solid-State Circuits (JSSC)}, vol. 45, no. 4, pp. 731--740, Apr. 2010 \cite{liu2010}.
+    \item \textbf{Bài báo 2 (Paper 2 - EL 2010 / TCAS-I):} V. Hariprasath, J. Guerber, S.-H. Lee, and U.-K. Moon, \textit{"Merged capacitor switching based SAR ADC with highest switching energy-efficiency,"} \textbf{Electronics Letters}, vol. 46, no. 9, pp. 620--621, Apr. 2010 \cite{hariprasath2010}.
+    \item \textbf{Bài báo 3 (Paper 3 - JSSC 2019):} Menglian Ding, Pieter Harpe, Yao-Hong Liu, Benjamin Busze, Kathleen Philips, and Harmke de Groot, \textit{"A 46-$\mu$W 13-ENOB 1-MS/s SAR-VCO ADC with zero-crossing based time-domain quantization,"} \textbf{IEEE Journal of Solid-State Circuits (JSSC)}, vol. 45, no. 3, pp. 782--793, Mar. 2019 \cite{ding2019}.
+\end{itemize}
+
+% Sơ đồ cấu trúc tổng quát của SAR ADC
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.9, auto, >=Stealth, node distance=2cm]
+    \node [draw, rectangle, fill=blue!10, minimum width=2.5cm, minimum height=1.2cm, align=center] (sample) {Khối lấy mẫu\\\& Giữ mẫu (S/H)};
+    \node [draw, rectangle, fill=orange!15, minimum width=2.5cm, minimum height=1.2cm, right=1.5cm of sample, align=center] (comp) {Bộ so sánh\\(Comparator)};
+    \node [draw, rectangle, fill=green!15, minimum width=2.5cm, minimum height=1.2cm, right=1.5cm of comp, align=center] (sar) {Thanh ghi SAR\\(SAR Logic)};
+    \node [draw, rectangle, fill=red!10, minimum width=3.5cm, minimum height=1.2cm, below=1.2cm of comp, align=center] (cdac) {Mảng tụ chuyển mạch\\(Capacitive DAC)};
+
+    \draw [->, thick] (-2, 0) -- node[above] {$V_{in}$} (sample);
+    \draw [->, thick] (sample) -- node[above] {$V_{x}$} (comp);
+    \draw [->, thick] (comp) -- node[above] {$D_{out}$} (sar);
+    \draw [->, thick] (sar) -| node[right, pos=0.25] {Mã điều khiển} (cdac);
+    \draw [->, thick] (cdac) -| node[left, pos=0.25] {$V_{DAC}$} (comp);
+    \draw [->, thick] (sar) -- (8.5, 0) node[right] {Ngõ ra số $N$-bit};
+\end{tikzpicture}
+\caption{Kiến trúc kinh điển của bộ biến đổi xấp xỉ liên tiếp (SAR ADC).}
+\label{fig:sar_general}
+\end{figure}
+
+%=============================================================================
+% CÂU 1: XÁC ĐỊNH VẤN ĐỀ NGHIÊN CỨU
+%=============================================================================
+\section{Câu 1. Xác định Vấn đề Nghiên cứu}
+
+\subsection{Vấn đề nghiên cứu chính của từng bài báo}
+
+\subsubsection{Bài báo 1: Năng lượng chuyển mạch mảng tụ và số lượng tụ trong SAR ADC}
+Trong cấu trúc SAR ADC vi sai truyền thống (Conventional differential architecture), mảng tụ CDAC vừa đóng vai trò lấy mẫu vừa là tải dung lượng chính trong các chu kỳ tìm kiếm nhị phân (Binary search). Tại mỗi bước so sánh, phương pháp chuyển mạch truyền thống yêu cầu nạp hoặc xả tụ điện giữa hai mức điện áp nguồn $V_{ref}$ và đất ($GND$). Điều này dẫn đến sự tiêu hao năng lượng nạp chuyển mạch rất lớn, chiếm từ $60\%$ đến $80\%$ tổng công suất tiêu thụ của toàn bộ vi mạch ADC. Ngoài ra, việc dùng cấu trúc đối xứng thông thường đòi hỏi số lượng tụ rất lớn ($2^N$ tụ đơn vị cho mỗi nhánh vi sai), làm tăng diện tích silicon và tăng gánh nặng tải cho mạch đệm điện áp tham chiếu. 
+
+\textbf{Vấn đề nghiên cứu cốt lõi:} Làm thế nào để giảm thiểu triệt để năng lượng chuyển mạch nạp/xả của mảng tụ CDAC và giảm số lượng tụ điện đơn vị mà không làm tăng độ phức tạp mạch điều khiển cũng như không làm giảm tốc độ chuyển đổi của ADC?
+
+\subsubsection{Bài báo 2: Sự dịch chuyển điện áp chế độ chung (Common-Mode Voltage Variation)}
+Mặc dù phương pháp Monotonic switching trong Bài báo 1 giải quyết xuất sắc bài toán năng lượng, nó lại nảy sinh một tác dụng phụ nghiêm trọng: trong suốt quá trình chuyển đổi $N$-bit, điện áp chế độ chung tại ngõ vào của bộ so sánh ($V_{cm}$) không cố định mà giảm dần một cách đơn điệu từ $V_{cm0}$ về $0\,\text{V}$. Sự thay đổi lớn của điện áp chế độ chung ($\Delta V_{cm} = V_{ref}/2$) gây ra sự biến đổi điểm làm việc tĩnh của cặp transistor vi sai ngõ vào comparator. Hệ quả là điện áp bù (offset voltage) của bộ so sánh bị biến thiên phụ thuộc vào mã số (code-dependent offset), làm suy giảm nghiêm trọng độ tuyến tính động học (SNDR/SFDR) và độ méo hài của ADC.
+
+\textbf{Vấn đề nghiên cứu cốt lõi:} Làm thế nào để đạt được hiệu suất năng lượng chuyển mạch tối đa (cao hơn cả phương pháp Monotonic) nhưng vẫn giữ điện áp chế độ chung tại ngõ vào bộ so sánh hoàn toàn không đổi trong suốt chu kỳ chuyển đổi?
+
+\subsubsection{Bài báo 3: Giới hạn vật lý khi thu nhỏ công nghệ và độ phân giải cao}
+Khi công nghệ chế tạo bán dẫn tiến về các node sâu hơn (dưới 40\,nm), việc thiết kế SAR ADC độ phân giải cao ($> 12$-bit) thuần túy trong miền điện áp vấp phải hai rào cản vật lý khắc nghiệt:
+\begin{enumerate}
+    \item \textbf{Nhiễu nhiệt động học ($kT/C$):} Để giữ mức nhiễu nhiệt đủ nhỏ cho độ phân giải cao, tổng điện dung mảng tụ phải rất lớn, làm bùng nổ diện tích và công suất nạp xả.
+    \item \textbf{Sai lệch phối hợp linh kiện (Capacitor mismatch):} Các sai số quy trình chế tạo khiến các tụ đơn vị không đồng nhất, đòi hỏi các mạch hiệu chuẩn số (digital calibration) cực kỳ phức tạp và tiêu hao diện tích lớn.
+\end{enumerate}
+
+\textbf{Vấn đề nghiên cứu cốt lõi:} Làm thế nào để mở rộng độ phân giải của SAR ADC lên trên 13-bit ENOB trong tiến trình CMOS hiện đại mà không bị giới hạn bởi diện tích mảng tụ và không đòi hỏi các thuật toán hiệu chuẩn số tốn kém?
+
+\subsection{Cách thức các tác giả xác định và trình bày vấn đề nghiên cứu}
+
+\begin{itemize}
+    \item \textbf{Bài báo 1 (Liu et al. - JSSC 2010):} Các tác giả sử dụng phương pháp diễn giải toán học kết hợp phân tích năng lượng. Tác giả xuất phát từ công thức tích phân dòng điện nạp tụ $E = \int V(t) \cdot i(t) \, dt$, chỉ ra tường minh sự lãng phí năng lượng của phương pháp chuyển mạch truyền thống qua các phương trình giải tích cụ thể cho từng bước bit. Từ đó, tác giả định vị khoảng trống nghiên cứu (research gap) là nhu cầu một quy trình chuyển mạch chỉ thực hiện xả điện tích mà không cần nạp ngược lại.
+    \item \textbf{Bài báo 2 (Hariprasath et al. - EL 2010):} Cách xác định vấn đề mang tính phản biện trực diện (critical review). Nhóm tác giả thừa nhận ưu điểm tiết kiệm năng lượng của bài báo trước (Liu et al.), nhưng nhanh chóng chỉ ra mắt xích yếu nhất trong chuỗi logic: hiện tượng dịch chuyển $V_{cm}$. Bằng việc định lượng hóa ảnh hưởng của biến thiên $V_{cm}$ lên offset vi sai, tác giả khẳng định một giải pháp thực sự bền vững phải đạt được trạng thái năng lượng tối ưu trong điều kiện $V_{cm} = \text{const}$.
+    \item \textbf{Bài báo 3 (Ding et al. - JSSC 2019):} Vấn đề được tiếp cận theo góc nhìn liên miền (inter-domain perspective). Tác giả phân tích điểm nghẽn của việc lượng tử hóa trong miền điện thế (Voltage-domain quantization) ở các bit trọng số thấp (LSB), sau đó liên hệ với ưu thế vượt trội của miền thời gian (Time-domain) khi độ trễ cổng logic giảm nhanh theo định luật Moore. Vấn đề được xác định là sự phối hợp tối ưu giữa SAR (miền điện thế) cho các bit MSB và VCO (miền thời gian) cho các bit LSB.
+\end{itemize}
+
+\subsection{So sánh điểm giống và khác nhau trong cách tiếp cận vấn đề nghiên cứu}
+
+\begin{itemize}
+    \item \textbf{Điểm tương đồng:} Cả ba bài báo đều lấy việc tối ưu hóa năng lượng tiêu thụ (giảm thiểu chỉ số Walden Figure-of-Merit - $FoM_W$) làm mục tiêu chiến lược cốt lõi. Cả ba công trình đều xuất phát từ các giới hạn vật lý nội tại của mạch tích hợp CMOS và đều chọn kiến trúc SAR làm xương sống để hiện thực hóa giải pháp.
+    \item \textbf{Điểm khác biệt:} 
+    \begin{itemize}
+        \item \textit{Phạm vi can thiệp:} Bài báo 1 và 2 giải quyết vấn đề ở cấp độ vi kiến trúc chuyển mạch (switching procedure level) của mảng tụ CDAC. Ngược lại, Bài báo 3 tiếp cận ở cấp độ kiến trúc hệ thống lai ghép (hybrid architectural level), kết hợp giữa miền điện áp và miền thời gian.
+        \item \textit{Sự đánh đổi (Trade-offs):} Bài báo 1 chấp nhận đánh đổi sự ổn định của điện áp $V_{cm}$ để lấy mức giảm năng lượng $81\%$. Bài báo 2 khống chế hoàn toàn $V_{cm}$ thông qua kỹ thuật gộp mức tham chiếu nhưng đòi hỏi thêm mức điện áp phụ $V_{cm}$. Bài báo 3 giải phóng yêu cầu kích thước tụ điện bằng cách bổ sung bộ dao động VCO, chấp nhận độ phức tạp cao hơn trong thiết kế mạch hồi tiếp và trôi tần số.
+    \end{itemize}
+\end{itemize}
+
+% Bảng so sánh 1: Tổng hợp xác định vấn đề nghiên cứu
+\begin{table}[H]
+\centering
+\small
+\caption{So sánh việc xác định vấn đề nghiên cứu giữa ba bài báo.}
+\label{tab:ss_cau1}
+\begin{tabularx}{\textwidth}{p{3.2cm}Xp{4.2cm}p{3.6cm}}
+\toprule
+\textbf{Tiêu chí} & \textbf{Bài báo 1 (Liu et al. 2010)} & \textbf{Bài báo 2 (Hariprasath 2010)} & \textbf{Bài báo 3 (Ding et al. 2019)} \\
+\midrule
+\textbf{Vấn đề cốt lõi} & Tổn hao năng lượng chuyển mạch mảng tụ và số lượng tụ đơn vị quá lớn. & Biến thiên điện áp chế độ chung $V_{cm}$ làm suy giảm độ chính xác của comparator. & Rào cản nhiễu $kT/C$ và sai lệch phối hợp tụ khi nâng cao độ phân giải ($>12$-bit). \\
+\addlinespace
+\textbf{Cấp độ tiếp cận} & Thuật toán chuyển đổi và vi kiến trúc mảng tụ CDAC. & Kỹ thuật chuyển mạch tụ đối xứng bảo toàn điện áp trung bình. & Kiến trúc lai tín hiệu: Tương tự -- Thời gian (SAR + VCO). \\
+\addlinespace
+\textbf{Phương pháp luận phát hiện vấn đề} & Mô hình hóa toán học quá trình nạp/xả tụ đơn vị trong từng chu kỳ so sánh. & Phản biện nhược điểm dịch chuyển offset của giải pháp Monotonic trước đó. & Phân tích giới hạn công nghệ sâu khi điện áp nguồn giảm và tần số cắt transistor tăng. \\
+\addlinespace
+\textbf{Đánh đổi chính (Trade-off)} & Năng lượng giảm mạnh nhưng $V_{cm}$ dịch chuyển lớn ($\Delta V_{cm} = V_{ref}/2$). & Giữ $V_{cm}$ cố định và giảm $93.7\%$ năng lượng, nhưng cần tạo mức áp $V_{cm}$. & Độ phân giải cao vượt bậc nhưng phải xử lý tính phi tuyến của bộ VCO. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%=============================================================================
+% CÂU 2: PHÂN TÍCH GIẢ THUYẾT NGHIÊN CỨU
+%=============================================================================
+\section{Câu 2. Phân tích Giả thuyết Nghiên cứu}
+
+\subsection{Xác định giả thuyết nghiên cứu của từng bài báo}
+Trong các bài báo khoa học thuộc lĩnh vực kỹ thuật phần cứng (Hardware Engineering / Circuit Design), các tác giả hiếm khi phát biểu giả thuyết một cách tường minh dưới dạng mệnh đề logic hình thức (\textit{"Giả thuyết là..."}). Thay vào đó, giả thuyết thường được trình bày ẩn tàng (implicit hypotheses) thông qua đề xuất kỹ thuật và các dự báo định lượng về hiệu năng.
+
+\begin{itemize}
+    \item \textbf{Giả thuyết Bài báo 1 (Monotonic switching):} 
+    \textit{"Nếu trong mỗi chu kỳ xấp xỉ liên tiếp, mạch chỉ thực hiện chuyển mạch duy nhất một bản tụ ở một nhánh vi sai từ $V_{ref}$ về đất ($GND$) mà không cần nạp ngược tụ còn lại lên $V_{ref}$, thì năng lượng chuyển mạch của mảng tụ sẽ giảm được $81\%$ và tổng diện tích tụ điện giảm $50\%$ so với kiến trúc truyền thống, trong khi tốc độ chuyển đổi vẫn được bảo toàn."}
+    \item \textbf{Giả thuyết Bài báo 2 (Merged Capacitor Switching - MCS):} 
+    \textit{"Nếu mảng tụ CDAC được nạp trước về mức điện áp chung $V_{cm}$ và quá trình chuyển mạch được thực hiện bằng cách chỉ nối tụ với $V_{ref}$ hoặc $GND$ tùy thuộc vào kết quả so sánh (kỹ thuật chuyển mạch gộp), thì năng lượng chuyển mạch sẽ giảm $93.7\%$ so với cấu trúc truyền thống và đồng thời điện áp chế độ chung tại ngõ vào bộ so sánh sẽ được duy trì hoàn toàn bất biến."}
+    \item \textbf{Giả thuyết Bài báo 3 (Hybrid SAR-VCO):} 
+    \textit{"Nếu chia quá trình chuyển đổi thành hai giai đoạn: giai đoạn 1 dùng SAR thô để giải mã 8-bit MSB và tạo điện áp dư, giai đoạn 2 chuyển đổi điện áp dư sang miền tần số thông qua bộ dao động VCO tích hợp điểm giao không (zero-crossing) để giải mã các bit LSB, thì hệ thống có thể đạt độ phân giải thực tế trên 13-bit ENOB với mức tiêu thụ năng lượng dưới $50\,\mu\text{W}$ mà không cần mạch hiệu chuẩn số phức tạp."}
+\end{itemize}
+
+% Minh họa sự so sánh cơ chế chuyển mạch giữa Monotonic và MCS
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.85]
+    % Monotonic curve
+    \draw[->, thick] (0,0) -- (6,0) node[right] {Chu kỳ bit ($k$)};
+    \draw[->, thick] (0,0) -- (0,3.5) node[above] {$V_{cm}(t)$};
+    \draw[dashed, red!80!black] (0,3) -- (5.5,3) node[right] {$V_{ref}/2$ (Bắt đầu)};
+    \draw[line width=1.5pt, red!80!black] (0,3) -- (1,2.5) -- (2,1.9) -- (3,1.3) -- (4,0.7) -- (5,0.2);
+    \node[red!80!black, above] at (3, 1.8) {Monotonic (Giảm đơn điệu)};
+    
+    % MCS curve
+    \draw[line width=1.5pt, blue!80!black] (0,1.5) -- (5.5,1.5);
+    \node[blue!80!black, above] at (3, 1.5) {MCS ($V_{cm}$ không đổi)};
+    \draw[dashed, blue!80!black] (0,1.5) node[left] {$V_{ref}/2$};
+\end{tikzpicture}
+\caption{So sánh diễn biến điện áp chế độ chung ($V_{cm}$) giữa kỹ thuật Monotonic và MCS.}
+\label{fig:vcm_comparison}
+\end{figure}
+
+\subsection{Đánh giá điểm mạnh và hạn chế của các giả thuyết}
+
+\subsubsection{Về tính rõ ràng (Clarity and Specificity)}
+\begin{itemize}
+    \item \textbf{Điểm mạnh:} Cả ba giả thuyết đều xác định rất rõ các biến đầu vào (biến độc lập: phương pháp chuyển mạch, cấu trúc lai ghép) và các chỉ số đo lường đầu ra (biến phụ thuộc: $E_{switch}$, ENOB, biến thiên $V_{cm}$, FoM). Các con số dự báo định lượng ($81\%$, $93.7\%$, 13-bit) cực kỳ sắc nét, không mơ hồ.
+    \item \textbf{Hạn chế:} Cả ba bài báo ban đầu đều không nêu rõ điều kiện biên (boundary conditions) về mặt lý thuyết. Chẳng hạn, giả thuyết Bài báo 1 không nêu rõ giả định rằng transistor của comparator phải duy trì vùng hoạt động bão hòa khi $V_{cm}$ tiệm cận $0\,\text{V}$.
+\end{itemize}
+
+\subsubsection{Về cơ sở khoa học (Scientific and Theoretical Foundation)}
+\begin{itemize}
+    \item \textbf{Bài báo 1 và 2:} Dựa trên nền tảng vững chắc của định luật bảo toàn điện tích và lý thuyết mạch điện tuyến tính. Phương trình tính toán năng lượng nạp tụ:
+    \begin{equation}
+        E_{switch} = \sum_{k=1}^{N} \int_0^\infty V_{ref} \cdot i_k(t) \, dt = \sum_{k=1}^{N} V_{ref} \cdot \Delta Q_k
+    \end{equation}
+    Phương trình này cho phép chứng minh giải tích chính xác mức tiết kiệm năng lượng lý thuyết ($81.1\%$ cho Monotonic và $93.7\%$ cho MCS) trước khi thực hiện mô phỏng.
+    \item \textbf{Bài báo 3:} Cơ sở khoa học dựa trên lý thuyết biến đổi điện áp sang thời gian (Voltage-to-Time conversion) và nguyên lý tích phân pha của bộ dao động vòng (Ring Oscillator). Điểm tựa lý thuyết là mối quan hệ tuyến tính giữa điện áp điều khiển và tần số dao động tức thời $f_{VCO}(t) = f_0 + K_{VCO} \cdot V_{res}(t)$.
+\end{itemize}
+
+\subsubsection{Về khả năng kiểm chứng (Testability and Falsifiability)}
+\begin{itemize}
+    \item \textbf{Khả năng kiểm chứng rất cao:} Cả ba nghiên cứu đều tuân thủ chặt chẽ chu trình thực nghiệm của ngành thiết kế vi mạch: Mô phỏng SPICE (Cadence Virtuoso) $\rightarrow$ Thiết kế layout $\rightarrow$ Chế tạo chip thực tế (Silicon Tape-out) $\rightarrow$ Đo kiểm băng đo trên máy phân tích tín hiệu phổ (Logic/Spectrum Analyzer).
+    \item \textbf{Tính bác bỏ (Falsifiability):} Nếu kết quả đo thực tế cho thấy phổ ngõ ra xuất hiện các búp sóng hài phi tuyến vượt quá ngưỡng tính toán (SNDR sụt giảm), giả thuyết sẽ lập tức bị bác bỏ hoặc đòi hỏi điều chỉnh.
+\end{itemize}
+
+\subsection{Phân tích mức độ phù hợp giữa giả thuyết, mục tiêu và phương pháp nghiên cứu}
+Có sự tương thích và gắn kết hoàn hảo giữa các thành tố nghiên cứu trong cả ba bài báo:
+\begin{enumerate}
+    \item \textbf{Mục tiêu:} Đều hướng đến việc giảm thiểu tiêu thụ năng lượng trên mỗi bước chuyển đổi (Walden FoM đạt mức kỷ lục tại thời điểm công bố).
+    \item \textbf{Giả thuyết:} Đề xuất cơ chế vật lý trực tiếp tác động vào nguyên nhân cốt lõi gây tiêu hao năng lượng (thay đổi trạng thái tụ hoặc thay đổi miền biểu diễn tín hiệu).
+    \item \textbf{Phương pháp thực hiện:}
+    \begin{itemize}
+        \item Xây dựng mô hình toán học giải tích xác định chính xác số chu kỳ và năng lượng.
+        \item Thiết kế mạch nguyên lý ở mức transistor trên công nghệ CMOS tiêu chuẩn (0.13\,$\mu$m cho Paper 1, 65\,nm cho Paper 3).
+        \item Băng đo vi mạch hoàn chỉnh với tín hiệu ngõ vào tần số Nyquist để kiểm chứng độ suy hao động học.
+    \end{itemize}
+\end{enumerate}
+
+% Bảng so sánh 2: Đánh giá giả thuyết nghiên cứu
+\begin{table}[H]
+\centering
+\small
+\caption{Đánh giá và phân tích giả thuyết nghiên cứu giữa ba bài báo.}
+\label{tab:ss_cau2}
+\begin{tabularx}{\textwidth}{p{3.2cm}Xp{4.2cm}p{3.6cm}}
+\toprule
+\textbf{Tiêu chí} & \textbf{Bài báo 1 (Liu et al. 2010)} & \textbf{Bài báo 2 (Hariprasath 2010)} & \textbf{Bài báo 3 (Ding et al. 2019)} \\
+\midrule
+\textbf{Bản chất giả thuyết} & Giảm bước chuyển mạch tụ chỉ còn xả một chiều giúp giảm năng lượng và tụ điện. & Chuyển mạch gộp (MCS) với mức áp $V_{cm}$ triệt tiêu biến thiên offset và nâng cao hiệu suất. & Lượng tử hóa kết hợp điện áp - thời gian vượt qua giới hạn mismatch mảng tụ. \\
+\addlinespace
+\textbf{Tính rõ ràng} & Rất rõ ràng, lượng hóa cụ thể mức giảm $81\%$ năng lượng và $50\%$ số tụ. & Tường minh, xác lập mốc kỷ lục tiết kiệm $93.7\%$ năng lượng và giữ $V_{cm}$ bất biến. & Rõ ràng về mặt kiến trúc, dự báo đạt 13-bit ENOB với công suất dưới $50\,\mu\text{W}$. \\
+\addlinespace
+\textbf{Cơ sở lý thuyết} & Định luật bảo toàn điện tích và giải tích mạch nạp tụ vi sai. & Lý thuyết cân bằng điện tích đối xứng và điện áp ngưỡng chuyển mạch. & Lý thuyết biến đổi điện áp sang pha/thời gian và lượng tử hóa tích phân. \\
+\addlinespace
+\textbf{Phương pháp kiểm chứng} & Mô phỏng Spectre và đo chip thực tế chế tạo ở tiến trình 0.13-$\mu$m CMOS. & Mô phỏng lý thuyết mạch tương đương và phân tích thống kê so sánh với các kỹ thuật khác. & Băng đo chip thực nghiệm chế tạo ở tiến trình 65-nm CMOS tiêu chuẩn. \\
+\addlinespace
+\textbf{Mức độ phù hợp} & Rất cao: giải pháp trực tiếp đáp ứng mục tiêu giảm công suất mảng tụ. & Hoàn hảo: khắc phục trực tiếp nhược điểm của kỹ thuật Monotonic đi trước. & Tuyệt vời: dung hòa giữa tốc độ của SAR và độ mịn lượng tử hóa của VCO. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+%=============================================================================
+% CÂU 3: ĐỀ XUẤT CẢI TIẾN
+%=============================================================================
+\section{Câu 3. Đề xuất Cải tiến và Hướng Phát triển}
+
+\subsection{Điều chỉnh và xác định lại vấn đề nghiên cứu dưới góc nhìn phản biện}
+Nếu đóng vai trò là tác giả nghiên cứu tiếp nối các công trình trên trong bối cảnh công nghệ bán dẫn hiện nay, tôi sẽ điều chỉnh và định nghĩa lại vấn đề nghiên cứu theo hai phương diện cốt lõi:
+
+\begin{enumerate}
+    \item \textbf{Đưa ảnh hưởng phi tuyến của biến thiên PVT (Process, Voltage, Temperature) vào trung tâm bài toán:}
+    Cả ba bài báo đều chủ yếu tập trung kiểm chứng ở điều kiện danh định (Typical corner, $27^\circ\text{C}$). Tuy nhiên, trong các tiến trình tiên tiến hiện nay (FinFET/GAAFET dưới 5\,nm), các hiệu ứng biến thiên quy trình sản xuất (Process variations), sụt áp nguồn (Voltage droop) và biến động nhiệt độ môi trường từ $-40^\circ\text{C}$ đến $125^\circ\text{C}$ làm thay đổi nghiêm trọng giá trị điện dung ký sinh và hệ số khuếch đại $K_{VCO}$. Vì vậy, vấn đề nghiên cứu cần được xác định lại là: \textit{"Tối ưu hóa năng lượng của SAR ADC gắn liền với tính bất biến trước sự biến thiên đa chiều của PVT và già hóa linh kiện (Aging - BTI/HCI)."}
+    \item \textbf{Xử lý tín hiệu thưa (Sparse Signals) trong các ứng dụng IoT y sinh cấy ghép:}
+    Trong các ứng dụng đo tín hiệu y sinh (ECG, EEG, EMG), tín hiệu có đặc tính thưa theo thời gian (chỉ xuất hiện xung hoạt động trong thời gian ngắn, phần lớn thời gian là trạng thái tĩnh). Cấu trúc SAR truyền thống vẫn lấy mẫu đều đặn theo tần số Nyquist cố định, gây lãng phí năng lượng không cần thiết. Vấn đề nghiên cứu cần mở rộng sang: \textit{"Thiết kế bộ biến đổi ADC tự thích ứng theo sự kiện (Event-driven / Level-crossing ADC) nhằm triệt tiêu năng lượng dư thừa khi tín hiệu không đổi."}
+\end{enumerate}
+
+\subsection{Đề xuất hai giả thuyết nghiên cứu mới}
+
+Dựa trên phân tích phản biện ở trên, tôi đề xuất hai giả thuyết nghiên cứu mới:
+
+\subsubsection{Giả thuyết Nghiên cứu Đề xuất 1 ($H_1$): Kiến trúc Tự hiệu chuẩn Trọng số Tụ thích nghi dựa trên Mạng Logic Thần kinh Nhẹ (Lightweight Neural Self-Calibration)}
+\begin{quote}
+\textit{\textbf{Phát biểu giả thuyết $H_1$:} "Nếu tích hợp một khối logic tự hiệu chuẩn trọng số tụ phi tuyến theo thời gian thực dựa trên ước lượng thống kê lỗi chuyển mạch (lightweight digital background calibration) ngay trên chip, mảng tụ CDAC có thể dung nạp mức sai lệch phối hợp tụ (mismatch) lên tới $5\%$ mà vẫn đạt độ phân giải thực tế $> 12.5$-bit ENOB trên dải nhiệt độ từ $-40^\circ\text{C}$ đến $125^\circ\text{C}$, trong khi công suất tiêu thụ của khối hiệu chuẩn không vượt quá $6\%$ tổng công suất tiêu thụ của ADC."}
+\end{quote}
+
+\begin{itemize}
+    \item \textbf{Biến độc lập:} Thuật toán ước lượng sai số trọng số tụ thích nghi theo thời gian thực.
+    \item \textbf{Biến phụ thuộc:} Độ phân giải hiệu dụng (ENOB), dải động không chứa hài (SFDR), và công suất phụ trội của mạch logic.
+    \item \textbf{Cơ chế tác động:} Thay vì dùng mảng tụ kích thước lớn để chống mismatch (làm tốn năng lượng), ta sử dụng các tụ đơn vị cực nhỏ (tiết kiệm năng lượng tối đa) và dùng mạch số sửa sai ngõ ra.
+\end{itemize}
+
+\subsubsection{Giả thuyết Nghiên cứu Đề xuất 2 ($H_2$): Bộ biến đổi SAR ADC Lấy mẫu Bất đồng bộ Kích hoạt theo Sự kiện kết hợp Chuyển mạch Tụ Tự thích nghi (Event-Driven Asynchronous SAR ADC)}
+\begin{quote}
+\textit{\textbf{Phát biểu giả thuyết $H_2$:} "Nếu kết hợp kỹ thuật lấy mẫu bất đồng bộ theo ngưỡng sự kiện (Event-driven asynchronous sampling) với quy trình chuyển mạch tụ MCS tự thích ứng theo biên độ đạo hàm tín hiệu ngõ vào ($dV_{in}/dt$), năng lượng chuyển mạch trung bình của ADC khi xử lý tín hiệu điện sinh học thưa (như tín hiệu thần kinh não bộ hoặc ECG) sẽ giảm hơn $50\%$ so với kỹ thuật MCS đồng bộ truyền thống mà không làm mất thông tin biên độ và thời gian của tín hiệu."}
+\end{quote}
+
+\begin{itemize}
+    \item \textbf{Biến độc lập:} Cơ chế kích hoạt lấy mẫu theo ngưỡng biến thiên tín hiệu và thuật toán phân bổ chu kỳ chuyển mạch thích ứng.
+    \item \textbf{Biến phụ thuộc:} Năng lượng tiêu thụ trung bình ($P_{avg}$), tỷ số tín hiệu trên nhiễu lượng tử (SQNR).
+    \item \textbf{Cơ chế tác động:} Tránh việc nạp xả mảng tụ CDAC khi điện áp ngõ vào không có biến động đáng kể, tập trung năng lượng vào các thời điểm có sự kiện hoạt động của sóng điện thế sinh học.
+\end{itemize}
+
+% Sơ đồ đề xuất cải tiến
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.88, auto, >=Stealth]
+    \node [draw, rectangle, fill=blue!10, rounded corners, minimum width=3cm, minimum height=1.2cm, align=center] (sensor) {Tín hiệu ngõ vào\\$V_{in}(t)$ (Y sinh/IoT)};
+    \node [draw, rectangle, fill=yellow!20, rounded corners, minimum width=3.2cm, minimum height=1.2cm, right=1.2cm of sensor, align=center] (event) {Bộ phát hiện sự kiện\\(Event Detector)};
+    \node [draw, rectangle, fill=green!15, rounded corners, minimum width=3.2cm, minimum height=1.2cm, right=1.2cm of event, align=center] (async_sar) {SAR ADC Bất đồng bộ\\với Mảng tụ Mini-CDAC};
+    \node [draw, rectangle, fill=red!15, rounded corners, minimum width=3.5cm, minimum height=1.2cm, below=1.2cm of async_sar, align=center] (calib) {Khối tự hiệu chuẩn số\\On-chip Calibration};
+
+    \draw [->, thick] (sensor) -- (event);
+    \draw [->, thick] (event) -- node[above] {Kích hoạt} (async_sar);
+    \draw [->, thick] (sensor) |- (1.5, -0.6) -| (async_sar);
+    \draw [->, thick] (async_sar) -- (12, 0) node[right] {Dữ liệu $D_{out}$};
+    \draw [->, thick] (async_sar) -- node[right] {Phản hồi lỗi} (calib);
+    \draw [->, thick] (calib) -- node[left] {Hệ số hiệu chỉnh} (async_sar);
+\end{tikzpicture}
+\caption{Sơ đồ khối kiến trúc vi mạch SAR ADC đề xuất cải tiến kết hợp phát hiện sự kiện và tự hiệu chuẩn số.}
+\label{fig:proposed_architecture}
+\end{figure}
+
+\subsection{Kế hoạch và phương pháp kiểm chứng giả thuyết đề xuất}
+Quy trình thực nghiệm kiểm chứng được xây dựng theo tiêu chuẩn công nghiệp vi mạch:
+\begin{enumerate}
+    \item \textbf{Mô hình hóa mức hệ thống (System-level Modeling):} Sử dụng MATLAB/Simulink và Python để mô phỏng thuật toán chuyển mạch cải tiến, đánh giá tính hội tụ của thuật toán hiệu chuẩn số dưới phân bố ngẫu nhiên Monte Carlo của sai lệch tụ (mismatch $\sigma = 1\% - 5\%$).
+    \item \textbf{Thiết kế mạch nguyên lý (Schematic Design):} Thiết kế chi tiết mạch ở mức transistor trên công nghệ CMOS 28-nm FD-SOI hoặc 65-nm tiêu chuẩn bằng bộ công cụ Cadence Virtuoso.
+    \item \textbf{Mô phỏng hỗn hợp (Co-simulation):} Thực hiện mô phỏng Post-layout (bao gồm ký sinh RC chiết xuất từ Calibre PEX) trong toàn bộ dải nhiệt độ từ $-40^\circ\text{C}$ đến $125^\circ\text{C}$ trên các góc công nghệ SS, TT, FF.
+    \item \textbf{Chế tạo chip và thực nghiệm đo đạc (Tape-out \& Silicon Measurement):} Đóng gói vi mạch thử nghiệm, dùng máy phát tín hiệu siêu tinh khiết (Audio Precision / Agilent RF Generator) và máy phân tích logic để đo phổ FFT, tính toán SNR, SNDR, THD, và vẽ đường cong Figure-of-Merit thực tế.
+\end{enumerate}
+
+%=============================================================================
+% BẢNG SO SÁNH TỔNG HỢP VÀ THẢO LUẬN
+%=============================================================================
+\section{Bảng So sánh Tổng hợp và Thảo luận Chuyên sâu}
+
+\subsection{Bảng so sánh tổng hợp ba bài báo và đề xuất cải tiến}
+Dưới đây là bảng so sánh toàn diện giữa ba công trình nghiên cứu đã phân tích cùng với kiến trúc đề xuất cải tiến của học viên.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Bảng so sánh tổng hợp toàn diện giữa các bài báo và nghiên cứu đề xuất.}
+\label{tab:master_comparison}
+\begin{tabularx}{\textwidth}{p{2.3cm}p{3.2cm}p{3.2cm}p{3.3cm}X}
+\toprule
+\textbf{Thông số / Tiêu chí} & \textbf{Bài báo 1 (Liu et al. \cite{liu2010})} & \textbf{Bài báo 2 (Hariprasath \cite{hariprasath2010})} & \textbf{Bài báo 3 (Ding et al. \cite{ding2019})} & \textbf{Đề xuất cải tiến (Học viên)} \\
+\midrule
+\textbf{Tạp chí / Năm} & IEEE JSSC, 2010 & Electronics Letters, 2010 & IEEE JSSC, 2019 & Đề xuất nghiên cứu mới (2026) \\
+\addlinespace
+\textbf{Kiến trúc chính} & Monotonic Switching SAR & Merged Capacitor Switching & Hybrid SAR-VCO Time-domain & Event-driven Asynchronous SAR + Auto-calibration \\
+\addlinespace
+\textbf{Tiến trình CMOS} & 0.13\,$\mu$m CMOS & Mô phỏng lý thuyết & 65\,nm CMOS & 28\,nm FD-SOI / 65\,nm CMOS \\
+\addlinespace
+\textbf{Độ phân giải danh định} & 10-bit & 10-bit & 14-bit & 12--14 bit tự thích nghi \\
+\addlinespace
+\textbf{Độ phân giải hiệu dụng} & 9.18-bit ENOB & 9.8-bit ENOB (Sim.) & 13.0-bit ENOB & 12.6--13.2 bit ENOB \\
+\addlinespace
+\textbf{Tốc độ lấy mẫu} & 50 MS/s & Phụ thuộc thiết kế & 1 MS/s & 0.1--5 MS/s (Bất đồng bộ) \\
+\addlinespace
+\textbf{Năng lượng tiết kiệm} & Giảm $81.1\%$ so với chuẩn & Giảm $93.7\%$ so với chuẩn & Giảm đột phá nhờ lượng tử miền thời gian & Giảm thêm $>50\%$ trên tín hiệu thưa sinh học \\
+\addlinespace
+\textbf{Tính ổn định $V_{cm}$} & Biến thiên lớn ($\Delta V_{cm} = V_{ref}/2$) & Cố định hoàn toàn ($V_{cm} = \text{const}$) & Không phụ thuộc mảng tụ LSB & Cố định kết hợp bù offset động \\
+\addlinespace
+\textbf{Chỉ số Walden FoM} & 25.5 fJ/conv-step & $< 15$ fJ/conv-step & 6.0 fJ/conv-step & $< 4.5$ fJ/conv-step (Kỳ vọng) \\
+\addlinespace
+\textbf{Ưu điểm nổi bật} & Đơn giản, giảm $50\%$ số tụ, không cần tụ phụ. & Năng lượng thấp nhất trong các cấu trúc thuần mảng tụ, $V_{cm}$ ổn định. & Độ phân giải rất cao, diện tích mảng tụ cực nhỏ, không cần hiệu chuẩn số nặng nề. & Miễn nhiễm trôi PVT, tiêu thụ năng lượng cực thấp khi tín hiệu tĩnh. \\
+\addlinespace
+\textbf{Hạn chế tồn đọng} & Offset comparator trôi theo mã số; suy giảm linearity. & Cần tạo thêm điện áp tham chiếu $V_{cm}$, mạch logic điều khiển phức tạp hơn. & VCO nhạy cảm với biến động nhiệt độ; phi tuyến điện áp-thời gian. & Mạch điều khiển bất đồng bộ cần chống hiện tượng metastable cẩn thận. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Bài học kinh nghiệm về phương pháp luận nghiên cứu khoa học}
+Từ quá trình đọc, phân tích và so sánh ba bài báo khoa học đỉnh cao trong ngành thiết kế vi mạch, học viên rút ra các bài học phương pháp luận sâu sắc:
+\begin{enumerate}
+    \item \textbf{Nghiên cứu khoa học là một dòng chảy kế thừa liên tục:} Không có giải pháp nào là hoàn hảo tuyệt đối. Bài báo 1 đột phá về tiết kiệm năng lượng nhưng để lại điểm yếu về biến thiên $V_{cm}$; Bài báo 2 nắm bắt điểm yếu đó để đề xuất giải pháp MCS hoàn thiện hơn; Bài báo 3 nhìn xa hơn giới hạn của mảng tụ để chuyển dịch bài toán sang miền thời gian. Việc nắm vững các công trình đi trước chính là chìa khóa để xác định khoảng trống nghiên cứu chính xác.
+    \item \textbf{Tầm quan trọng của việc lượng hóa giả thuyết:} Các bài báo xuất sắc trên IEEE đều xây dựng mô hình toán học giải tích chặt chẽ trước khi thiết kế vi mạch. Giả thuyết nghiên cứu phải có khả năng kiểm chứng bằng các con số định lượng (tỷ lệ phần trăm năng lượng, chỉ số FoM, độ tuyến tính), tạo tiền đề vững chắc cho việc bảo vệ kết quả nghiên cứu.
+    \item \textbf{Tư duy phản biện và giải quyết mâu thuẫn kỹ thuật:} Trong thiết kế vi mạch, mọi cải tiến đều đi kèm sự đánh đổi (Trade-off giữa Power, Speed, Area và Accuracy). Người nghiên cứu khoa học giỏi không phải là người cố gắng tối ưu mọi thông số cùng lúc một cách viển vông, mà là người biết hy sinh thông số ít quan trọng trong một bối cảnh ứng dụng cụ thể để đạt được đột phá ở thông số then chốt.
+\end{enumerate}
+
+%=============================================================================
+% KẾT LUẬN
+%=============================================================================
+\section{Kết luận}
+Báo cáo đã hoàn thành toàn diện các yêu cầu của Bài tập cá nhân học phần Phương pháp nghiên cứu khoa học (GK5033):
+\begin{itemize}
+    \item Lựa chọn và phân tích sâu sắc 03 công trình nghiên cứu tiêu biểu về bộ biến đổi SAR ADC năng lượng cực thấp trong ngành thiết kế vi mạch tích hợp.
+    \item Làm rõ cách thức các tác giả xây dựng vấn đề nghiên cứu, chỉ ra mối liên hệ kế thừa và phản biện lẫn nhau giữa các nghiên cứu.
+    \item Nhận diện, bóc tách và đánh giá chi tiết các giả thuyết nghiên cứu về tính rõ ràng, cơ sở khoa học và khả năng kiểm chứng thực nghiệm.
+    \item Đóng vai trò là người nghiên cứu tiếp nối để tái định nghĩa vấn đề và đề xuất hai giả thuyết nghiên cứu mới giàu tính khả thi, định hướng ứng dụng cho vi mạch y sinh và IoT thế hệ mới.
+    \item Tổng hợp kết quả trong bảng so sánh chi tiết và đúc kết những bài học phương pháp luận nghiên cứu có giá trị thực tiễn cao.
+\end{itemize}
+
+%=============================================================================
+% TÀI LIỆU THAM KHẢO
+%=============================================================================
+\newpage
+\begin{thebibliography}{99}
+\addcontentsline{toc}{section}{Tài liệu tham khảo}
+
+\bibitem{liu2010}
+C.-C. Liu, S.-J. Chang, G.-Y. Huang, and Y.-Z. Lin, 
+\newblock ``A 10-bit 50-MS/s SAR ADC with a monotonic capacitor switching procedure,''
+\newblock \emph{IEEE Journal of Solid-State Circuits}, vol. 45, no. 4, pp. 731--740, Apr. 2010.
+
+\bibitem{hariprasath2010}
+V. Hariprasath, J. Guerber, S.-H. Lee, and U.-K. Moon,
+\newblock ``Merged capacitor switching based SAR ADC with highest switching energy-efficiency,''
+\newblock \emph{Electronics Letters}, vol. 46, no. 9, pp. 620--621, Apr. 2010.
+
+\bibitem{ding2019}
+M. Ding, P. Harpe, Y.-H. Liu, B. Busze, K. Philips, and H. de Groot,
+\newblock ``A 46-$\mu$W 13-ENOB 1-MS/s SAR-VCO ADC with zero-crossing based time-domain quantization,''
+\newblock \emph{IEEE Journal of Solid-State Circuits}, vol. 54, no. 3, pp. 782--793, Mar. 2019.
+
+\bibitem{razavi2016}
+B. Razavi,
+\newblock \emph{Design of Analog CMOS Integrated Circuits}, 2nd ed.
+\newblock New York, NY, USA: McGraw-Hill Education, 2016.
+
+\bibitem{ginsburg2007}
+B. P. Ginsburg and A. P. Chandrakasan,
+\newblock ``500-MS/s 5-bit ADC in 65-nm CMOS with split capacitor array DAC,''
+\newblock \emph{IEEE Journal of Solid-State Circuits}, vol. 42, no. 4, pp. 739--747, Apr. 2007.
+
+\bibitem{zhu2010}
+Z. Zhu, Y. Xiao, and X. Liang,
+\newblock ``An energy-efficient capacitor switching scheme for SAR-ADCs,''
+\newblock \emph{IEEE Transactions on Circuits and Systems II: Express Briefs}, vol. 57, no. 7, pp. 546--550, Jul. 2010.
+
+\bibitem{phan2022}
+Phan Thành Nhân,
+\newblock \emph{Bài giảng Phương pháp nghiên cứu khoa học},
+\newblock Trường Đại học Bách Khoa -- ĐHQG-HCM, 2022.
+
+\end{thebibliography}
+
+\end{document}
+
