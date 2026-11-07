@@ -28,15 +28,8 @@ jobs:
           root_file: "*.tex"
           glob_root_file: true
           compiler: latexmk
-          args: >-
-            -pdf
-            -interaction=nonstopmode
-            -file-line-error
-            -halt-on-error
+          args: -pdf -file-line-error -interaction=nonstopmode
           work_in_root_file_dir: true
-          latexmk_shell_escape: false
-          latexmk_use_lualatex: false
-          latexmk_use_xelatex: false
 
       - name: Upload PDF Artifacts
         uses: actions/upload-artifact@v4

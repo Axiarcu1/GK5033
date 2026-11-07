@@ -43,6 +43,7 @@
 }
 
 \begin{document}
+\pagenumbering{gobble}
 
 %=============================================================================
 % TRANG BÌA (TITLE PAGE)
@@ -92,8 +93,10 @@
 \end{titlepage}
 
 \newpage
+\pagenumbering{roman}
 \tableofcontents
 \newpage
+\pagenumbering{arabic}
 
 %=============================================================================
 % MỞ ĐẦU
@@ -197,9 +200,10 @@ Khi công nghệ bán dẫn tiến về các nút sâu hơn (dưới 40\,nm), vi
 \begin{table}[H]
 \centering
 \small
+\setlength{\tabcolsep}{5pt}
 \caption{So sánh việc xác định vấn đề nghiên cứu giữa ba bài báo.}
 \label{tab:ss_cau1}
-\begin{tabularx}{\textwidth}{p{3.2cm}Xp{4.2cm}p{3.6cm}}
+\begin{tabularx}{\textwidth}{>{\RaggedRight}p{2.6cm} >{\RaggedRight}X >{\RaggedRight}p{3.8cm} >{\RaggedRight}p{3.5cm}}
 \toprule
 \textbf{Tiêu chí} & \textbf{Bài báo 1 (Liu et al. 2010)} & \textbf{Bài báo 2 (Hariprasath 2010)} & \textbf{Bài báo 3 (Ding et al. 2019)} \\
 \midrule
@@ -310,13 +314,14 @@ Có sự tương thích và gắn kết hoàn hảo giữa các thành tố nghi
 \begin{table}[H]
 \centering
 \small
+\setlength{\tabcolsep}{5pt}
 \caption{Đánh giá và phân tích giả thuyết nghiên cứu giữa ba bài báo.}
 \label{tab:ss_cau2}
-\begin{tabularx}{\textwidth}{p{3.2cm}Xp{4.2cm}p{3.6cm}}
+\begin{tabularx}{\textwidth}{>{\RaggedRight}p{2.6cm} >{\RaggedRight}X >{\RaggedRight}p{3.8cm} >{\RaggedRight}p{3.5cm}}
 \toprule
 \textbf{Tiêu chí} & \textbf{Bài báo 1 (Liu et al. 2010)} & \textbf{Bài báo 2 (Hariprasath 2010)} & \textbf{Bài báo 3 (Ding et al. 2019)} \\
 \midrule
-\textbf{Bản chất giả thuyết} & Giảm bước chuyển mạch tụ chỉ còn xả một chiều giúp giảm năng lượng và tụ điện. & Chuyển mạch gộp (MCS) với mức áp $V_{cm}$ triệt tiêu biến thiên offset và nâng cao hiệu suất. & Lượng tử hóa kết hợp điện áp - thời gian vượt qua giới hạn mismatch mảng tụ. \\
+\textbf{Bản chất giả thuyết} & Giảm bước chuyển mạch tụ chỉ còn xả một chiều giúp giảm năng lượng và tụ điện. & Chuyển mạch gộp (MCS) với mức áp $V_{cm}$ triệt tiêu biến thiên offset và nâng cao hiệu suất. & Lượng tử hóa kết hợp điện áp -- thời gian vượt qua giới hạn mismatch mảng tụ. \\
 \addlinespace
 \textbf{Tính rõ ràng} & Rất rõ ràng, lượng hóa cụ thể mức giảm $81\%$ năng lượng và $50\%$ số tụ. & Tường minh, xác lập mốc kỷ lục tiết kiệm $93.7\%$ năng lượng và giữ $V_{cm}$ bất biến. & Rõ ràng về mặt kiến trúc, dự báo đạt 13-bit ENOB với công suất dưới $50\,\mu\text{W}$. \\
 \addlinespace
@@ -348,7 +353,7 @@ Nếu đóng vai trò là tác giả nghiên cứu tiếp nối các công trìn
 
 Dựa trên phân tích phản biện ở trên, tôi đề xuất hai giả thuyết nghiên cứu mới:
 
-\subsubsection{Giả thuyết Nghiên cứu Đề xuất 1 ($H_1$): Kiến trúc Tự hiệu chuẩn Trọng số Tụ thích nghi dựa trên Mạng Logic Thần kinh Nhẹ (Lightweight Neural Self-Calibration)}
+\subsubsection{Giả thuyết Nghiên cứu Đề xuất 1 \texorpdfstring{($H_1$)}{(H1)}: Kiến trúc Tự hiệu chuẩn Trọng số Tụ thích nghi dựa trên Mạng Logic Thần kinh Nhẹ (Lightweight Neural Self-Calibration)}
 \begin{quote}
 \textit{\textbf{Phát biểu giả thuyết $H_1$:} "Nếu tích hợp một khối logic tự hiệu chuẩn trọng số tụ phi tuyến theo thời gian thực dựa trên ước lượng thống kê lỗi chuyển mạch (lightweight digital background calibration) ngay trên chip, mảng tụ CDAC có thể dung nạp mức sai lệch phối hợp tụ (mismatch) lên tới $5\%$ mà vẫn đạt độ phân giải thực tế $> 12.5$-bit ENOB trên dải nhiệt độ từ $-40^\circ\text{C}$ đến $125^\circ\text{C}$, trong khi công suất tiêu thụ của khối hiệu chuẩn không vượt quá $6\%$ tổng công suất tiêu thụ của ADC."}
 \end{quote}
@@ -359,7 +364,7 @@ Dựa trên phân tích phản biện ở trên, tôi đề xuất hai giả thu
     \item \textbf{Cơ chế tác động:} Thay vì dùng mảng tụ kích thước lớn để chống mismatch (làm tốn năng lượng), ta sử dụng các tụ đơn vị cực nhỏ (tiết kiệm năng lượng tối đa) và dùng mạch số sửa sai ngõ ra.
 \end{itemize}
 
-\subsubsection{Giả thuyết Nghiên cứu Đề xuất 2 ($H_2$): Bộ biến đổi SAR ADC Lấy mẫu Bất đồng bộ Kích hoạt theo Sự kiện kết hợp Chuyển mạch Tụ Tự thích nghi (Event-Driven Asynchronous SAR ADC)}
+\subsubsection{Giả thuyết Nghiên cứu Đề xuất 2 \texorpdfstring{($H_2$)}{(H2)}: Bộ biến đổi SAR ADC Lấy mẫu Bất đồng bộ Kích hoạt theo Sự kiện kết hợp Chuyển mạch Tụ Tự thích nghi (Event-Driven Asynchronous SAR ADC)}
 \begin{quote}
 \textit{\textbf{Phát biểu giả thuyết $H_2$:} "Nếu kết hợp kỹ thuật lấy mẫu bất đồng bộ theo ngưỡng sự kiện (Event-driven asynchronous sampling) với quy trình chuyển mạch tụ MCS tự thích ứng theo biên độ đạo hàm tín hiệu ngõ vào ($dV_{in}/dt$), năng lượng chuyển mạch trung bình của ADC khi xử lý tín hiệu điện sinh học thưa (như tín hiệu thần kinh não bộ hoặc ECG) sẽ giảm hơn $50\%$ so với kỹ thuật MCS đồng bộ truyền thống mà không làm mất thông tin biên độ và thời gian của tín hiệu."}
 \end{quote}
@@ -404,7 +409,7 @@ Dựa trên phân tích phản biện ở trên, tôi đề xuất hai giả thu
     % 3. Event Detector -> SAR (kích hoạt chuyển đổi, từ cạnh đông Event rẽ xuống)
     \draw [->, thick] (event.east) -- ++(0.8, 0)
         -- ++(0, -2.5)
-        -- node[right, font=\small] {Kích hoạt\\chuyển đổi} (sar.north);
+        -- node[right, align=left, font=\small] {Kích hoạt\\chuyển đổi} (sar.north);
 
     % 4. SAR -> Ngõ ra số (sang phải)
     \draw [->, thick] (sar.east) -- ++(2.0, 0)
