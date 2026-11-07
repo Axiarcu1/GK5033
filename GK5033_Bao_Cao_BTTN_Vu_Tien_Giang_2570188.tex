@@ -4,7 +4,10 @@
 \usepackage[english,vietnamese]{babel}
 \usepackage{geometry}
 \geometry{a4paper, margin=1in, top=1.2in, bottom=1.2in}
+\setlength{\headheight}{14pt}
+\addtolength{\topmargin}{-2pt}
 \usepackage{graphicx}
+\usepackage{ragged2e}
 \usepackage{tikz}
 \usetikzlibrary{circuits.ee.IEC, positioning, arrows.meta, calc, patterns, shapes.geometric}
 \usepackage{listings}
@@ -439,33 +442,34 @@ Dưới đây là bảng so sánh toàn diện giữa ba công trình nghiên c�
 \begin{table}[H]
 \centering
 \scriptsize
+\setlength{\tabcolsep}{4pt}
 \caption{Bảng so sánh tổng hợp toàn diện giữa các bài báo và nghiên cứu đề xuất.}
 \label{tab:master_comparison}
-\begin{tabularx}{\textwidth}{p{2.3cm}p{3.2cm}p{3.2cm}p{3.3cm}X}
+\begin{tabularx}{\textwidth}{>{\RaggedRight}p{2.1cm} >{\RaggedRight}p{3.0cm} >{\RaggedRight}p{3.0cm} >{\RaggedRight}p{3.0cm} >{\RaggedRight}X}
 \toprule
-\textbf{Thông số / Tiêu chí} & \textbf{Bài báo 1 (Liu et al. \cite{liu2010})} & \textbf{Bài báo 2 (Hariprasath \cite{hariprasath2010})} & \textbf{Bài báo 3 (Ding et al. \cite{ding2019})} & \textbf{Đề xuất cải tiến (Học viên)} \\
+\textbf{Thông số} & \textbf{Bài báo 1 \newline Liu et al.~\cite{liu2010}} & \textbf{Bài báo 2 \newline Hariprasath~\cite{hariprasath2010}} & \textbf{Bài báo 3 \newline Ding et al.~\cite{ding2019}} & \textbf{Đề xuất cải tiến (Học viên)} \\
 \midrule
-\textbf{Tạp chí / Năm} & IEEE JSSC, 2010 & Electronics Letters, 2010 & IEEE JSSC, 2019 & Đề xuất nghiên cứu mới (2026) \\
+\textbf{Tạp chí / Năm} & IEEE JSSC, 2010 & Electronics Letters, 2010 & IEEE JSSC, 2019 & Đề xuất nghiên cứu (2026) \\
 \addlinespace
-\textbf{Kiến trúc chính} & Monotonic Switching SAR & Merged Capacitor Switching & Hybrid SAR-VCO Time-domain & Event-driven Asynchronous SAR + Auto-calibration \\
+\textbf{Kiến trúc} & Monotonic Switching SAR & Merged Capacitor Switching & Hybrid SAR-VCO & Event-driven Async. SAR + Auto-calibration \\
 \addlinespace
-\textbf{Tiến trình CMOS} & 0.13\,$\mu$m CMOS & Mô phỏng lý thuyết & 65\,nm CMOS & 28\,nm FD-SOI / 65\,nm CMOS \\
+\textbf{Tiến trình CMOS} & 0.13\,$\mu$m & Mô phỏng lý thuyết & 65\,nm & 28\,nm FD-SOI / 65\,nm \\
 \addlinespace
-\textbf{Độ phân giải danh định} & 10-bit & 10-bit & 14-bit & 12--14 bit tự thích nghi \\
+\textbf{Độ phân giải danh định} & 10-bit & 10-bit & 14-bit & 12--14 bit \\
 \addlinespace
-\textbf{Độ phân giải hiệu dụng} & 9.18-bit ENOB & 9.8-bit ENOB (Sim.) & 13.0-bit ENOB & 12.6--13.2 bit ENOB \\
+\textbf{ENOB hiệu dụng} & 9.18-bit & 9.8-bit (Sim.) & 13.0-bit & 12.6--13.2 bit \\
 \addlinespace
-\textbf{Tốc độ lấy mẫu} & 50 MS/s & Phụ thuộc thiết kế & 1 MS/s & 0.1--5 MS/s (Bất đồng bộ) \\
+\textbf{Tốc độ lấy mẫu} & 50 MS/s & Phụ thuộc thiết kế & 1 MS/s & 0.1--5 MS/s \\
 \addlinespace
-\textbf{Năng lượng tiết kiệm} & Giảm $81.1\%$ so với chuẩn & Giảm $93.7\%$ so với chuẩn & Giảm đột phá nhờ lượng tử miền thời gian & Giảm thêm $>50\%$ trên tín hiệu thưa sinh học \\
+\textbf{Năng lượng tiết kiệm} & Giảm 81,1\% so với chuẩn & Giảm 93,7\% so với chuẩn & Giảm đột phá nhờ lượng tử miền thời gian & Giảm $>$50\% trên tín hiệu thưa sinh học \\
 \addlinespace
-\textbf{Tính ổn định $V_{cm}$} & Biến thiên lớn ($\Delta V_{cm} = V_{ref}/2$) & Cố định hoàn toàn ($V_{cm} = \text{const}$) & Không phụ thuộc mảng tụ LSB & Cố định kết hợp bù offset động \\
+\textbf{Ổn định $V_{cm}$} & Biến thiên lớn ($\Delta V_{cm} = V_{ref}/2$) & Cố định ($V_{cm} = \text{const}$) & Không phụ thuộc tụ LSB & Cố định + bù offset động \\
 \addlinespace
-\textbf{Chỉ số Walden FoM} & 25.5 fJ/conv-step & $< 15$ fJ/conv-step & 6.0 fJ/conv-step & $< 4.5$ fJ/conv-step (Kỳ vọng) \\
+\textbf{Walden FoM} & 25.5 fJ/conv & $<$15 fJ/conv & 6.0 fJ/conv & $<$4.5 fJ/conv \\
 \addlinespace
-\textbf{Ưu điểm nổi bật} & Đơn giản, giảm $50\%$ số tụ, không cần tụ phụ. & Năng lượng thấp nhất trong các cấu trúc thuần mảng tụ, $V_{cm}$ ổn định. & Độ phân giải rất cao, diện tích mảng tụ cực nhỏ, không cần hiệu chuẩn số nặng nề. & Miễn nhiễm trôi PVT, tiêu thụ năng lượng cực thấp khi tín hiệu tĩnh. \\
+\textbf{Ưu điểm} & Đơn giản, giảm 50\% số tụ, không cần tụ phụ. & Năng lượng thấp nhất trong kiến trúc thuần tụ; $V_{cm}$ ổn định. & Độ phân giải cao; tụ nhỏ; không cần hiệu chuẩn nặng. & Miễn nhiễm trôi PVT; tiêu thụ cực thấp khi tín hiệu tĩnh. \\
 \addlinespace
-\textbf{Hạn chế tồn đọng} & Offset comparator trôi theo mã số; suy giảm linearity. & Cần tạo thêm điện áp tham chiếu $V_{cm}$, mạch logic điều khiển phức tạp hơn. & VCO nhạy cảm với biến động nhiệt độ; phi tuyến điện áp-thời gian. & Mạch điều khiển bất đồng bộ cần chống hiện tượng metastable cẩn thận. \\
+\textbf{Hạn chế} & Offset comparator phụ thuộc mã số; suy giảm linearity. & Cần điện áp tham chiếu $V_{cm}$ phụ; điều khiển phức tạp hơn. & VCO nhạy cảm nhiệt độ; phi tuyến điện áp--thời gian. & Điều khiển bất đồng bộ cần chống metastable. \\
 \bottomrule
 \end{tabularx}
 \end{table}

@@ -22,20 +22,28 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Compile LaTeX to PDF
+      - name: Compile LaTeX to PDF (latexmk - multi-pass)
         uses: xu-cheng/latex-action@v3
         with:
           root_file: "*.tex"
           glob_root_file: true
-          compiler: pdflatex
-          args: -interaction=nonstopmode -file-line-error
+          compiler: latexmk
+          args: >-
+            -pdf
+            -interaction=nonstopmode
+            -file-line-error
+            -halt-on-error
           work_in_root_file_dir: true
+          latexmk_shell_escape: false
+          latexmk_use_lualatex: false
+          latexmk_use_xelatex: false
 
       - name: Upload PDF Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: GK5033-PDF-Report
           path: "*.pdf"
+          if-no-files-found: error
 
       - name: Create or Update Release with PDF
         uses: ncipollo/release-action@v1
@@ -44,7 +52,13 @@ jobs:
           artifacts: "*.pdf"
           tag: "latest"
           name: "Báo cáo PDF GK5033 mới nhất"
-          body: "Báo cáo Bài tập cá nhân học phần Phương pháp nghiên cứu khoa học (GK5033) được biên dịch tự động từ mã nguồn LaTeX mới nhất."
+          body: |
+            ## GK5033 - Phương pháp Nghiên cứu Khoa học
+
+            **Bài tập Cá nhân (30%) - Vũ Tiến Giang (MSHV: 2570188)**
+
+            Chủ đề: Phân tích và so sánh Vấn đề nghiên cứu, Giả thuyết nghiên cứu trong các bài báo khoa học ngành Thiết kế Vi mạch (SAR ADC năng lượng cực thấp).
+
+            > File PDF được biên dịch tự động từ mã nguồn LaTeX mới nhất.
           allowUpdates: true
           replacesArtifacts: true
-
