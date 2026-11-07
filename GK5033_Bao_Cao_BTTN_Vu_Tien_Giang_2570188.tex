@@ -378,49 +378,46 @@ Dựa trên phân tích phản biện ở trên, tôi đề xuất hai giả thu
 % Sơ đồ đề xuất cải tiến
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[>=Stealth, node distance=0pt]
-    % --- Hàng giữa (y=0): Khối ngõ vào và SAR ADC ---
+\begin{tikzpicture}[>=Stealth]
+    % Khối 1: Ngõ vào tín hiệu (Bên trái)
     \node [draw, rectangle, fill=blue!10, rounded corners=3pt,
            minimum width=2.8cm, minimum height=1.3cm, align=center, font=\small]
            (sensor) at (0, 0) {Tín hiệu ngõ vào\\$V_{in}(t)$ (Y sinh/IoT)};
 
-    \node [draw, rectangle, fill=green!15, rounded corners=3pt,
-           minimum width=3.2cm, minimum height=1.3cm, align=center, font=\small]
-           (sar) at (8.5, 0) {SAR ADC Bất đồng bộ\\với Mảng tụ Mini-CDAC};
-
-    % --- Hàng trên (y=2.5): Khối phát hiện sự kiện ---
+    % Khối 2: Bộ phát hiện sự kiện (Ở trên, thẳng hàng với SAR ADC)
     \node [draw, rectangle, fill=yellow!25, rounded corners=3pt,
-           minimum width=3.0cm, minimum height=1.2cm, align=center, font=\small]
-           (event) at (4.0, 2.5) {Bộ phát hiện sự kiện\\(Event Detector)};
+           minimum width=3.4cm, minimum height=1.2cm, align=center, font=\small]
+           (event) at (5.5, 2.2) {Bộ phát hiện sự kiện\\(Event Detector)};
 
-    % --- Hàng dưới (y=-2.5): Khối tự hiệu chuẩn ---
+    % Khối 3: SAR ADC Bất đồng bộ (Ở giữa)
+    \node [draw, rectangle, fill=green!15, rounded corners=3pt,
+           minimum width=3.4cm, minimum height=1.3cm, align=center, font=\small]
+           (sar) at (5.5, 0) {SAR ADC Bất đồng bộ\\với Mảng tụ Mini-CDAC};
+
+    % Khối 4: Khối tự hiệu chuẩn số (Ở dưới, thẳng hàng với SAR ADC)
     \node [draw, rectangle, fill=red!15, rounded corners=3pt,
-           minimum width=3.2cm, minimum height=1.3cm, align=center, font=\small]
-           (calib) at (8.5, -2.8) {Khối tự hiệu chuẩn số\\On-chip Calibration};
+           minimum width=3.4cm, minimum height=1.2cm, align=center, font=\small]
+           (calib) at (5.5, -2.2) {Khối tự hiệu chuẩn số\\On-chip Calibration};
 
-    % === Các đường nối ===
-    % 1. Sensor -> Event Detector (rẽ lên trên)
-    \draw [->, thick] (sensor.north) -- ++(0, 1.0)
-        -- node[above, font=\small] {$V_{in}$ (phát hiện ngưỡng)} (event.west);
+    % Đường 1: Từ ngõ vào rẽ lên Bộ phát hiện sự kiện (dùng đường gãy góc vuông |- rõ ràng)
+    \draw [->, thick] (sensor.east) -- ++(0.8, 0) |- node[above, pos=0.75, font=\small] {Phát hiện ngưỡng} (event.west);
 
-    % 2. Sensor -> SAR ADC (ngang, trục chính)
-    \draw [->, thick] (sensor.east) -- node[above, font=\small] {$V_{in}$ (tín hiệu tương tự)} (sar.west);
+    % Đường 2: Tín hiệu tương tự trực tiếp từ ngõ vào sang SAR ADC (đường thẳng ngang)
+    \draw [->, thick] (sensor.east) -- node[above, font=\small] {Tín hiệu tương tự $V_{in}$} (sar.west);
 
-    % 3. Event Detector -> SAR (kích hoạt chuyển đổi, từ cạnh đông Event rẽ xuống)
-    \draw [->, thick] (event.east) -- ++(0.8, 0)
-        -- ++(0, -2.5)
-        -- node[right, align=left, font=\small] {Kích hoạt\\chuyển đổi} (sar.north);
+    % Đường 3: Tín hiệu kích hoạt từ Event Detector xuống SAR ADC (đường thẳng đứng từ trên xuống)
+    \draw [->, thick] (event.south) -- node[right, font=\small] {Kích hoạt chuyển đổi} (sar.north);
 
-    % 4. SAR -> Ngõ ra số (sang phải)
+    % Đường 4: Dữ liệu ngõ ra số từ SAR ADC sang phải
     \draw [->, thick] (sar.east) -- ++(2.0, 0)
         node[right, align=left, font=\small] {Dữ liệu ngõ ra số\\$D_{out}$};
 
-    % 5. SAR -> Calib (ước lượng sai số, cạnh tây của SAR xuống calib)
-    \draw [->, thick] ($(sar.south) + (-0.6, 0)$) -- ($(calib.north) + (-0.6, 0)$)
+    % Đường 5: Ước lượng sai số từ SAR ADC xuống Khối hiệu chuẩn (nhánh dọc bên trái)
+    \draw [->, thick] ($(sar.south) + (-0.75, 0)$) -- ($(calib.north) + (-0.75, 0)$)
         node[midway, left, font=\footnotesize, align=right] {Ước lượng\\sai số};
 
-    % 6. Calib -> SAR (trọng số hiệu chỉnh, cạnh đông calib lên SAR)
-    \draw [->, thick] ($(calib.north) + (0.6, 0)$) -- ($(sar.south) + (0.6, 0)$)
+    % Đường 6: Trọng số hiệu chỉnh từ Khối hiệu chuẩn lên SAR ADC (nhánh dọc bên phải)
+    \draw [->, thick] ($(calib.north) + (0.75, 0)$) -- ($(sar.south) + (0.75, 0)$)
         node[midway, right, font=\footnotesize, align=left] {Trọng số\\hiệu chỉnh};
 \end{tikzpicture}
 \caption{Sơ đồ khối kiến trúc vi mạch SAR ADC đề xuất cải tiến kết hợp phát hiện sự kiện và tự hiệu chuẩn số.}
